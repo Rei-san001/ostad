@@ -10,6 +10,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,10 +30,12 @@ class _LoginPageState extends State<LoginPage> {
               Text('Login With Your Phone & Password'),
               SizedBox(height: 20),
               Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     Text('Phone Number'),
                     TextFormField(
+                      controller: phoneController,
                       decoration: InputDecoration(
                         hintText: 'Phone Number',
                         border: OutlineInputBorder(
@@ -46,6 +53,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     SizedBox(height: 20),
                     TextFormField(
+                      controller: passwordController,
                       decoration: InputDecoration(
                         hintText: 'Password',
                         border: OutlineInputBorder(
@@ -55,10 +63,27 @@ class _LoginPageState extends State<LoginPage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter password';
+                        } else if (value.length <= 6) {
+                          return 'Password must be of 6 letters';
                         } else {
                           return null;
                         }
                       },
+                    ),
+                    SizedBox(height: 20),
+
+                    SizedBox(
+                      width: 300,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Login Successful')),
+                            );
+                          }
+                        },
+                        child: Text('Login'),
+                      ),
                     ),
                   ],
                 ),
